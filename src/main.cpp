@@ -23,8 +23,6 @@ void setup() {
   //Turning all the motors to LOW to begin with
   digitalWrite(in1_A, LOW);
   digitalWrite(in2_A, LOW);
-
-  Serial.begin(9600);
 }
 
 // put function definitions here:
