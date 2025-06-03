@@ -11,13 +11,22 @@ int chl1{10};                               //reading values for power channel f
 
 int va_pwm{0};                             //reading pwm ranging
 int va2_pwm{0};                            //value after calculations done on it
-float va2_pwmB{0};                         //speed value for the second motor with different rpm (shifted from an unknown RPM to 25000rpm)
-float down_shift{0.76};                       //ratio that pwmB is being shifted by (assuming that the unknown rpm is 33000)
+int va2_pwmB{0};                         //speed value for the second motor with different rpm (shifted from an unknown RPM to 25000rpm)
+float down_shift{1};                       //ratio that pwmB is being shifted by (assuming that the unknown rpm is 33000)
+
+
 
 int va_low{1440};                          //low value of the undefined range
 int va_high{1560};                         //high value of the undefined range
 int lowest{970};                           //highest value for the receiver
 int highest{1940};                         //lowest value for the receiver 
+
+int map_high{255};
+int map_low{50};
+
+int map_highB{int(trunc(map_high*down_shift))};
+int map_lowB{int(trunc(-(map_high))*down_shift)};
+
 
 //controls for changing directions 
 
@@ -94,6 +103,7 @@ void relaySwitch(bool relayState){
 void vectorControl(){
   if (va2_pwm >= 0) {
     analogWrite(en_A, va2_pwm);            //writing the speed when it is forwards
+
     analogWrite(en_B, va2_pwmB);
 
 
@@ -113,17 +123,17 @@ void loop() {
   if (va_pwm == 0 || (va_pwm > va_low && va_pwm < va_high)){
     va2_pwm = 0;
     va2_pwmB =0;
-  } else{
+} else{
     if (va_pwm >= va_high){
-      va2_pwm  = map(va_pwm, va_high, highest, 50, 255);
-      va2_pwm = constrain(va2_pwm, 50, 255);
-      va2_pwmB = map(va_pwm, va_high, highest, 50, 255*down_shift);
-      va2_pwmB = constrain(va2_pwmB, 50, 255*down_shift);
-    } else {
-      va2_pwm  = map(va_pwm, lowest, va_low, -255, -50);
-      va2_pwm = constrain(va2_pwm, -255, -50);
-      va2_pwmB = map(va_pwm, lowest, va_low, -255*down_shift, -50);
-      va2_pwmB =constrain(va2_pwm, -255*down_shift, -50);
+      va2_pwm  = map(va_pwm, va_high, highest, map_low, map_high);
+      va2_pwm = constrain(va2_pwm, map_low, map_high);
+      va2_pwmB = map(va_pwm, va_high, highest, map_low, map_highB);
+      va2_pwmB = constrain(va2_pwmB, map_low, map_highB);
+  } else {
+      va2_pwm  = map(va_pwm, lowest, va_low, -(map_high), -(map_low));
+      va2_pwm = constrain(va2_pwm, -(map_high), -(map_low));
+      va2_pwmB = map(va_pwm, lowest, va_low, map_lowB, -(map_low));
+      va2_pwmB =constrain(va2_pwm, map_lowB, -(map_low));
     }
   } 
  
