@@ -1,4 +1,4 @@
-#include <Arduino.h>
+// #include <Arduino.h>
 // #include <stdio.h>                      //TESTING, COMMENT OUT LATER
 
 //Motor pin declarations
@@ -46,8 +46,8 @@ void setup() {
   // digitalWrite(in2_A, LOW);
 
 
-  bool checkSwitch();
-  checkSwitch();
+  // bool checkSwitch();
+  // checkSwitch();
   Serial.begin(9600);                   //TESTING, COMMENT OUT LATER
   // va_pwm = 1000;                     //TESTING, COMMENT OUT LATER
 }
@@ -87,15 +87,36 @@ Serial.println(curr_dir);
    
 }
 
+//remaking basic functions for cpp 
+int map(int input, int low_in, int high_in, int low_out, int high_out){
+  return output;
+}
+
+long constrain(long input, long low_bounds, long high_bounds){
+
+}
+
+void digitalWrite(int pin, bool value){
+
+}
+
+void analogWrite(int pin, int value){
+
+}
+
+unsigned long pulseIn(int pin, bool value, long timeout){
+  return 
+}
+
 
 void relaySwitch(bool relayState){
   analogWrite(en_A, 0);
   analogWrite(en_B, 0);
 
   if (relayState != false) {
-    digitalWrite(in1_A, LOW);
+    digitalWrite(in1_A, true);
   } else {
-    digitalWrite(in1_A, HIGH);
+    digitalWrite(in1_A, false);
   }
   
 }
@@ -103,9 +124,7 @@ void relaySwitch(bool relayState){
 void vectorControl(){
   if (va2_pwm >= 0) {
     analogWrite(en_A, va2_pwm);            //writing the speed when it is forwards
-
     analogWrite(en_B, va2_pwmB);
-
 
   } else {
     analogWrite(en_A, -(va2_pwm));         //writing the speed when it is backwards
@@ -116,7 +135,7 @@ void vectorControl(){
 void loop() {
   testSpeed();                          //TESTING, COMMENT OUT LATER
 
-  va_pwm = pulseIn(chl1, HIGH, 25000);     //recording the pulse width from 1000 to 2000
+  va_pwm = pulseIn(chl1, true, 25000);     //recording the pulse width from 1000 to 2000
   va_pwm = constrain(va_pwm, lowest, highest);
   
   //code to normalize the recorded pulse width between (0, 255)
