@@ -1,13 +1,15 @@
 // #include <Arduino.h>
-// #include <stdio.h>                      //TESTING, COMMENT OUT LATER
+#include <stdio.h>                      //TESTING, COMMENT OUT LATER
+#include "main.h"
 
 //Motor pin declarations
-int en_A{6};                               //Digital PWM pin -> speed control for the motor
-int en_B{3};             
+int EN_R_PIN{3};             
 
 int in1_A{9};                              //control pin for  motor polarity
 
-int chl1{10};                               //reading values for power channel for the motor
+int chl1{10};                              //reading values for power channel for the motor
+int chl2{0};                               //channel to select the steady state to use 
+
 
 int va_pwm{0};                             //reading pwm ranging
 int va2_pwm{0};                            //value after calculations done on it
@@ -28,6 +30,22 @@ int map_highB{int(trunc(map_high*down_shift))};
 int map_lowB{int(trunc(-(map_high))*down_shift)};
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //controls for changing directions 
 
 bool curr_dir{true};                       //current direction, where true is forwards and false is backwards 
@@ -35,10 +53,10 @@ bool prev_dir{true};                       //previous direction
 
 void setup() {
   //Setup the motor control pins to output and the power channel to input
-  pinMode(en_A, OUTPUT);
+  pinMode(EN_L_PIN, OUTPUT);
   pinMode(in1_A, OUTPUT);
   // pinMode(in2_A, OUTPUT);
-  pinMode(en_B, OUTPUT);
+  pinMode(EN_R_PIN, OUTPUT);
   pinMode(chl1, INPUT);
 
   //Turning all the motors to LOW to begin with
@@ -110,8 +128,8 @@ unsigned long pulseIn(int pin, bool value, long timeout){
 
 
 void relaySwitch(bool relayState){
-  analogWrite(en_A, 0);
-  analogWrite(en_B, 0);
+  analogWrite(EN_L_PIN, 0);
+  analogWrite(EN_R_PIN, 0);
 
   if (relayState != false) {
     digitalWrite(in1_A, true);
@@ -123,12 +141,12 @@ void relaySwitch(bool relayState){
 
 void vectorControl(){
   if (va2_pwm >= 0) {
-    analogWrite(en_A, va2_pwm);            //writing the speed when it is forwards
-    analogWrite(en_B, va2_pwmB);
+    analogWrite(EN_L_PIN, va2_pwm);            //writing the speed when it is forwards
+    analogWrite(EN_R_PIN, va2_pwmB);
 
   } else {
-    analogWrite(en_A, -(va2_pwm));         //writing the speed when it is backwards
-    analogWrite(en_B, -(va2_pwmB)); 
+    analogWrite(EN_L_PIN, -(va2_pwm));         //writing the speed when it is backwards
+    analogWrite(EN_R_PIN, -(va2_pwmB)); 
   }
 }
 
