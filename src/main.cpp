@@ -1,20 +1,12 @@
 // #include <Arduino.h>
-#include <stdio.h>                      //TESTING, COMMENT OUT LATER
+
 #include "main.h"
 
-//Motor pin declarations
-int EN_R_PIN{3};             
-
-int in1_A{9};                              //control pin for  motor polarity
-
-int chl1{10};                              //reading values for power channel for the motor
-int chl2{0};                               //channel to select the steady state to use 
-
-
+//Motor pin declarations           
 int va_pwm{0};                             //reading pwm ranging
-int va2_pwm{0};                            //value after calculations done on it
-int va2_pwmB{0};                         //speed value for the second motor with different rpm (shifted from an unknown RPM to 25000rpm)
-float down_shift{1};                       //ratio that pwmB is being shifted by (assuming that the unknown rpm is 33000)
+float va_L_pwm{0};                            //value after calculations done on it
+float va_R_pwm{0};                         //speed value for the second motor with different rpm (shifted from an unknown RPM to 25000rpm)
+float ratio_LR{1};                       //ratio that pwmB is being shifted by (assuming that the unknown rpm is 33000)
 
 
 
@@ -25,25 +17,6 @@ int highest{1940};                         //lowest value for the receiver
 
 int map_high{255};
 int map_low{50};
-
-int map_highB{int(trunc(map_high*down_shift))};
-int map_lowB{int(trunc(-(map_high))*down_shift)};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //controls for changing directions 
@@ -123,8 +96,24 @@ void analogWrite(int pin, int value){
 }
 
 unsigned long pulseIn(int pin, bool value, long timeout){
-  return 
+  if(pin == value){
+    while()
+  }
+  
+  return ;
 }
+
+void serialPrint(){
+
+
+}
+
+float pulseOut(){
+  HAL_UART_Transmit_IT()
+
+}
+
+
 
 
 void relaySwitch(bool relayState){
